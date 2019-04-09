@@ -1,1 +1,93 @@
-.loginSpan{position:relative}
+.loginBlock{position:relative;margin-top:20px;}
+.loginBlock input[type=text],input[type=password]{
+    width:180px;
+    height:40px;
+    border:1px solid #dbdbdb;
+    outline: none;
+    font-size: 1.3em;
+    text-indent:10px;
+    border-radius:7px;
+}
+.my_protocol .keepalive_protocol{
+    -webkit-appearance: none;
+    appearance:none;
+    outline:none;
+    display:none;
+}
+.my_protocol .keepalive_protocol+span{
+    width:16px;
+    height: 16px;
+    background-color: red;
+    display:inline-block;
+    background:url(../resource/sign/icon/icon_checkbox.png) no-repeat;
+    background-position-x: 0px;
+    background-position-y: -25px;
+    position: relative;
+    top:3px;
+}
+.my_protocol .keepalive_protocol:checked +span{
+    background-position:0 0px;
+}
+.my_protocol{
+    color:#959595;
+    font-size:12px;
+    line-height: 28px;
+    text-align:center;
+    text-decoration: none;
+    margin-left:10px;
+}
+.button{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    position: relative;
+    display: inline-block;
+    background:white;
+    border-radius:3px;
+    border:1px solid #959595;
+    width:78px;
+    height: 28px;
+    line-height: 28px;
+    text-align:center;
+    color:#959595;
+    font-size:12px;
+    cursor:pointer;
+    margin-left:10px;
+    text-decoration: none;
+}
+.red{
+    background:#e97c62;
+    border:1px solid #e97c62;
+    color:white;
+    margin-left:15px;
+}
+.separator{
+    vertical-align:middle;
+    display:inline-block;
+    width:1px;
+    margin:0 15px;
+    height:40px;
+    border-right:1px solid #959595;
+}
+.button1{
+    border:none;
+}
+.separator1{
+    margin:0 10px;
+    height:1.5em;
+}
+.button2{
+    color:#959595;
+    font-size:12px;
+    line-height: 28px;
+    text-align:center;
+    text-decoration: none;
+    cursor:pointer;
+}
+.normalword{
+    color:#959595;
+    font-size:12px;
+    line-height: 28px;
+    text-align:center;
+    text-decoration: none;
+}

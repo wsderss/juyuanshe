@@ -240,4 +240,10 @@ return [
         'var_page'  => 'page',
         'list_rows' => 15,
     ],
+    'view_replace_str'=>[
+        '_css_'=>SITE_URL.'css',
+        '_js_'=>SITE_URL.'js',
+        '_resource_'=>SITE_URL.'resource',
+        '_http_'=>SITE_URL,
+    ]
 ];
