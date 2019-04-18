@@ -1,5 +1,4 @@
-function getSession() {
-  if($.session.get('uname')=='null' || $.session.get('uname')=='undefined') {
+function getSession(){
       $.ajax({
           url: "/api/Index/getSession",
           dataType: "json",
@@ -17,15 +16,17 @@ function getSession() {
               mizhu.toast('网络错误');
           }
       });
-  }
 }
+//登录检查
 function checkUser(action) {
     switch (action){
         case 'index':
             if (!judgement()) {
                mizhu.toast('为保证信息安全，请登录后操作!',2000);
-               window.setTimeout("'/'",2000);
-           }
+               window.setTimeout("window.location='/'",2000);
+            }else{
+                return judgement();
+            }
         break;
         case 'home':
             if (judgement()) {
@@ -36,13 +37,49 @@ function checkUser(action) {
     }
 }
 function judgement() {
-    if ($.session.get('uname') == "undefined" || $.session.get('uname') == 'null') {
-        if ($.cookie('uname') == "undefined" && $.cookie('uname') == "null") {
-            return false;
+    if (typeof($.session.get('uname')) == "undefined"){
+            var sessionType = false;
         }else {
             return true;
         }
-    }else{
+    if (typeof($.cookie('uname')) == "undefined"  || $.cookie('uname')=='undefined') {
+            var cookieType = false;
+        } else {
+            return true;
+        }
+    if(sessionType || cookieType){
         return true;
+    }
+}
+
+//登录控制
+function checkform(obj) {
+    var username = obj.username;
+    var password = obj.password;
+    var keepalive = obj.keepalive;
+    if (username.length == 0) {
+        mizhu.toast('用户名不能为空！', 2000);
+        return false;
+    }
+    if (password.length == 0) {
+        mizhu.toast('密码不能为空！', 2000);
+        return false;
+    }
+    if (keepalive == 'true') {
+         keepalive= '1';
+    } else {
+         keepalive = '0';
+    }
+    var loginArr = [username,password,keepalive ];
+    return loginArr;
+}
+function charge(obj) {
+    switch(obj.val()){
+        case 'true':
+            obj.attr('value','false');
+            break;
+        case 'false':
+            obj.attr('value','true');
+            break;
     }
 }

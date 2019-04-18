@@ -22,8 +22,8 @@ function get_auto_login_list(){
                      cookie('uname',$v,3600);
                  }
                  return true;
+                 break;
              }
-             break;
         }
     }
     return false;

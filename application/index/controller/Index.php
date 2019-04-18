@@ -1,8 +1,11 @@
 <?php
 namespace app\index\controller;
 use think\Controller;
-use think\Session;
 use think\cache\driver\Redis;
+use app\index\model\Region;
+use app\index\model\Board;
+use app\index\model\Post;
+use app\index\model\Index as InModel;
 
 class Index extends Controller
 {
@@ -16,6 +19,11 @@ class Index extends Controller
     }
     public function home()
     {
+        $InModel=new InModel();
+        $formHome=$InModel->homecontents();
+        $this->assign('regions',$formHome->regions);
+        $this->assign('boards',$formHome->boards);
+        $this->assign('url',$formHome->url);
         return view('home');
     }
     public function phpinfo(){

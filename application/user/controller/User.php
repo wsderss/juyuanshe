@@ -46,7 +46,6 @@ public function login(Request $request){
     if(empty($loginData)){
         return view('login');
     }else {
-
         $users = new Users();
         $result=$users->login($loginData);
         switch ($result){

@@ -13,6 +13,11 @@ Route::rule([
     'home'=>'index/Index/home',
     'login'=>'index/Index/login',
     'register'=>'user/User/register',
+    'zone'=>'index/Form/zone',
+    'board/:bid'=>'index/Form/board',
+    'thread/:bid/[:mode]'=>'index/Form/thread',
+    'post-read/:bid/:threadid/[:page]'=>'index/Form/postRead',
+    'post-new/:bid/[:parentid]'=>'index/Form/postNew',
     ]);
 
 //return [

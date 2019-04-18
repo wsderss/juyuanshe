@@ -1,27 +1,19 @@
-$(document).ready(function(){$("[data-action='login']").click(function(){ var loginArr=checkform();if(loginArr){login(loginArr);}});});
-getSession();
-checkUser('home');
-function checkform() {
-    var username = $(".loginBlock input:eq(0)").val();
-    var password = $(".loginBlock input:eq(1)").val();
-    var keepalive = $(".loginBlock input:eq(2)").val();
+$(document).ready(function(){
+    $("[data-action='login']").click(function(){
+        var objLogin=new Object();
+        objLogin.username=$(".loginBlock input:eq(0)").val();
+        objLogin.password=$(".loginBlock input:eq(1)").val();
+        objLogin.keepalive=$(".loginBlock input:eq(2)").val();
+        if(checkform(objLogin)){
+            login(checkform(objLogin));
+        }});
+    $("[data-action='keepalive']").click(function(){
+        var objCheckbox=$("[data-action='keepalive']");
+        charge(objCheckbox);
+    });
 
-    if (username.length == 0) {
-        mizhu.toast('用户名不能为空！', 2000);
-        return false;
-    }
-    if (password.length == 0) {
-        mizhu.toast('真实姓名不能为空！', 2000);
-        return false;
-    }
-    if (keepalive == 'true') {
-        var keepalive= '1';
-    } else {
-        var keepalive = '0';
-    }
-    var loginArr = [username,password,keepalive ];
-    return loginArr;
-}
+});
+checkUser('home');
 function login(loginArr) {
     $.ajax({
         type:'POST',

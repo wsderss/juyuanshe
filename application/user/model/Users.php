@@ -14,10 +14,12 @@ class Users extends Model{
   //类型转换
     protected $type=array(
       'registertime'=>'timestamp:Y-m-d H:m:s',
-      'birthday'=>'timestamp:Y-m-d'
+      'birthday'=>'timestamp:Y-m-d',
+      'create_time'=>'timestamp:Y-m-d H:m:s',
+      'update_time'=>'timestamp:Y-m-d H:m:s'
     );
   //开启自动写入时间戳字段
-    protected $autoWriteTimestamp='datetime';
+    protected $autoWriteTimestamp='true';
   //指定数据表
     protected $table='users';
     public function login($loginArr){
@@ -27,7 +29,7 @@ class Users extends Model{
        }elseif($findData['password']==md5($loginArr['loginData'][1])){
            Session::set('uname',$loginArr['loginData'][0],'users');
            Cookie::set('uname',$loginArr['loginData'][0],3600);
-           self::autoLogin($loginArr);
+           self::autoLogin($loginArr['loginData']);
            return 1;//表示登录成功
        }else{
            return 2;//表示密码不正确

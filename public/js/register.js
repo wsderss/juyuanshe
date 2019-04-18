@@ -1,8 +1,7 @@
 var t=5;
 $(document).ready(function () {
-    getSession();
-    checkPermit();
-})
+    checkUser("home");
+});
 function checkform() {
     var email=$(".form input:eq(0)").val();
     var nickname=$(".form input:eq(1)").val();
@@ -147,17 +146,4 @@ function delayJumpToHomepage(contents){
     document.getElementById('delayJumpToHomepage').innerHTML=contents+t+"秒后跳转到主页"; // 显示倒计时
     t--; // 计数器递减
 }
-function checkPermit() {
-    if (typeof($.session.get('uname')) != "undefined" && $.session.get('uname')!='null') {
-        if (typeof($.cookie('uname')) != "undefined" && $.cookie('uname') != "null") {
-            // $(".form .tabs .tabs-info").attr("style","display:none");
-            $(".form ,.tabs ,.tabs-info").hide();
-            $("#delayJumpWindow").show();
-            // var content='社员账号已登录，无需注册,';
-            setInterval("delayJumpToHomepage('社员账号已登录，无需注册,')", 1000);
-            // delayJumpToHomepage(content);
-        }
-    }
-}
-
 

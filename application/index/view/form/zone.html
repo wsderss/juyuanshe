@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>聚远社BBS-聚远社员的网上家园</title>
+    <link rel="stylesheet" href="_css_/reference/all.css?v19">
+    <link rel="stylesheet" href="_css_/reference/font-awesome.min.css">
+    <link rel="stylesheet" href="_css_/reference/github.css">
+    <link rel="stylesheet" href="_css_/reference/perfect-scrollbar.min.css">
+    <link rel="stylesheet" href="_css_/reference/highslide.css">
+    <link rel="stylesheet" href="_css_/reference/bdwm.min.css?v4">
+    <link rel="stylesheet" href="_css_/reference/alert_style.css">
+    <link rel="stylesheet" href="_css_/home.css">
+    <script type="text/javascript" src="_js_/reference/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="_js_/reference/jquery.cookie.js"></script>
+    <script type="text/javascript" src="_js_/reference/jquery.session.js"></script>
+    <script type="text/javascript" src="_js_/reference/jquery.pjax.js"></script>
+    <script type="text/javascript" src="_js_/reference/alert_ui.js"></script>
+    <script type="text/javascript" src="_js_/common.js"></script>
+    <script type="text/javascript" src="_js_/home.js"></script>
+</head>
+<body>
+<nav id="left-nav">
+    <div id="logo"><a href="home.html"><img src="_resource_/sign/logo_ibfb2M.png"></a></div>
+    <div id="user-info">
+        <div class="have-login" style="display: none;">
+            <div class="portrait-container">
+                <img class="portrait pic" src="_resource_/images/user/portrait-neu.png">
+            </div>
+            <p class="username ">
+                <a class="user-list-trigger" data-action="user-list-trigger" id="triangleSpan"></a>
+                <span data-role="login-username">{php}echo session('uname','','users');{/php}</span>
+                <span class="triangle"></span>
+                <span class="btn-list"  style="display: none">
+          <a class="btn-goto-homepage" href="user.php?uid=15265">个人主页</a>
+          <a href="modify-profile.php">修改帐号</a>
+          <a class="btn-logout">退出</a>
+        </span><!--以下是已注销账号的显示内容-->
+            </p>
+            <!--<ul id="detail-list">-->
+            <!--<li data-role="login-nickname">昵称：未名湖里的鱼儿</li>-->
+            <!--<li data-role="login-rankname">等级：高级站友</li>-->
+            <!--<li data-role="login-numposts">文章：1695</li>-->
+            <!--</ul>-->
+            <!--<a href="refill-form.php" class="sub-button red">-->
+            <!--<span>重填注册单</span>-->
+            <!--</a>-->
+        </div>
+        <div class="not-login">
+            <form id="loginform">
+                <div class="portrait-container">
+                    <img class="portrait pic" src="_resource_/images/user/icon-weidenglu.png">
+                </div>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="用户名 / username" name="username" id="username">
+                </div>
+                <div class="input-wrapper">
+                    <input type="password" placeholder="密码 / password" name="password">
+                </div>
+                <div class="input-wrapper">
+                    <input type="checkbox" name="keepalive" data-role="keepalive" id="form-remember-checkbox" value="false">
+                    <label for="form-remember-checkbox">下次自动登录</label>
+                </div>
+                <div class="btn-group">
+                    <a class="btn" id="btn-login">登录</a>
+                    <a class="btn" id="btn-register" data-no-pjax href="register.html" target="_blank">注册</a>
+                </div>
+                <a class="white-link" data-no-pjax href="reset-password-req.php">找回密码</a>
+            </form>
+        </div>
+    </div>
+    <div id="link-buttons">
+        <a href="_http_home.html" id="tab_home"><img src="_resource_/images/home/iconfont-home.png">首页</a>
+        <a href="_http_favorite.html" id="tab_favorite"><img src="_resource_/images/home/icon-shoucangjia.png">版面收藏夹</a>
+        <a href="_http_zone.html" id="tab_zone"><img src="_resource_/images/home/iconfont-fenlei.png">版面目录</a>
+        <a href="_http_favorite-collection.html" id="tab_favorite_collection"><img src="_resource_/images/home/icon-jinghuaqu.png">精华区收藏夹</a>
+        <a href="_http_friend.html" id="tab_friend"><img src="_resource_/images/home/iconfont-haoyou.png">关注/粉丝</a>
+    </div>
+</nav>
+
+<nav id="top-nav">
+    <div class="wrapper">
+        <div class="inner-wrapper">
+            <div class="search-box bdwm-search-box">
+                <input class="search-ipt" id="search-ipt" type="text" placeholder="搜索版面、帖子、用户" autocomplete="off">
+                <img class="search-btn" src="_resource_/images/home/iconfont-sousuo.png">
+                <ul class="search-result box-shadow keywords-result"></ul>
+                <ul class="search-result box-shadown history-result"></ul>
+            </div>
+            <div class="top-right-links">
+                <a href="help.php">帮助中心</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div id="page-content">
+    <div id="login-info" style="display: none">
+        <div data-role="login-info-username" data-value="guest"></div>
+        <div data-role="login-info-nickname" data-value="未名湖里的鱼儿"></div>
+        <div data-role="login-info-rankname" data-value="高级站友"></div>
+        <div data-role="login-info-numposts" data-value="1695"></div>
+    </div>
+    <!-- this is the real content, should be returned from server when PJAX working.-->
+    <!-- start main -->
+    <div id="bdwm-title">版面目录 - 北大未名BBS</div>
+    <script>
+        $("#link-buttons > a").removeClass("cur");
+        $("#tab_zone").addClass("cur");
+    </script>
+    <div id="page-board">
+        <div class="breadcrumb-trail">
+            <!--这里是面包屑导航，样式在global里面-->
+            <a href="home.html">首页</a>
+            <a href="zone.html">版面目录</a>
+        </div>
+        <div id="boards-list" class="boards-wrapper zones">
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=621"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">〇区</span>
+                        <span class="name">BBS&nbsp;系统</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=1">[站长的工作室]</a>
+                    <a class="inline-link red" href="thread.php?bid=351">[校园热点]</a>
+                    <a class="inline-link red" href="thread.php?bid=162">[十九周年站庆]</a>
+                    <a class="inline-link red" href="thread.php?bid=130">[炫彩未名]</a>
+                    <a class="inline-link red" href="thread.php?bid=164">[仲裁]</a>
+                    <a class="inline-link red" href="thread.php?bid=662">[六区区务]</a>
+                    <a class="inline-link red" href="thread.php?bid=665">[五区区务]</a>
+                    <a class="inline-link red" href="thread.php?bid=752">[八区区务]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=664"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">一区</span>
+                        <span class="name">据点</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=24091">alwaysmoving</a>
+                        <a class="inline-link red" href="user.php?uid=23162">sliorveen</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=1431">[燕园食宿]</a>
+                    <a class="inline-link red" href="thread.php?bid=44">[智能科学系]</a>
+                    <a class="inline-link red" href="thread.php?bid=846">[工学院]</a>
+                    <a class="inline-link red" href="thread.php?bid=138">[医学部]</a>
+                    <a class="inline-link red" href="thread.php?bid=322">[信息科学技术学院]</a>
+                    <a class="inline-link red" href="thread.php?bid=294">[北大发展]</a>
+                    <a class="inline-link red" href="thread.php?bid=51">[数学科学学院]</a>
+                    <a class="inline-link red" href="thread.php?bid=155">[国际关系学院]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=671"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">二区</span>
+                        <span class="name">文学版区</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=5785">Manwe</a>
+                        <a class="inline-link red" href="user.php?uid=17149">mayyao</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=468">[皇城根儿]</a>
+                    <a class="inline-link red" href="thread.php?bid=104">[清华大学]</a>
+                    <a class="inline-link red" href="thread.php?bid=453">[天南地北山东人]</a>
+                    <a class="inline-link red" href="thread.php?bid=464">[天府之国]</a>
+                    <a class="inline-link red" href="thread.php?bid=486">[南粤风采]</a>
+                    <a class="inline-link red" href="thread.php?bid=463">[重庆]</a>
+                    <a class="inline-link red" href="thread.php?bid=457">[浙江]</a>
+                    <a class="inline-link red" href="thread.php?bid=451">[江苏]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=673"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">三区</span>
+                        <span class="name">游戏研讨</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=9877">satanxxs</a>
+                        <a class="inline-link red" href="user.php?uid=25993">entropy</a>
+                        <a class="inline-link red" href="user.php?uid=23162">sliorveen</a>
+                        <a class="inline-link red" href="user.php?uid=24189">Homagod</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=244">[医学与健康]</a>
+                    <a class="inline-link red" href="thread.php?bid=342">[讲座动态]</a>
+                    <a class="inline-link red" href="thread.php?bid=346">[数学工具]</a>
+                    <a class="inline-link red" href="thread.php?bid=249">[谈股论金]</a>
+                    <a class="inline-link red" href="thread.php?bid=185">[军事知识]</a>
+                    <a class="inline-link red" href="thread.php?bid=236">[数学]</a>
+                    <a class="inline-link red" href="thread.php?bid=407">[英语写作]</a>
+                    <a class="inline-link red" href="thread.php?bid=56">[英语角]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=674"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">四区</span>
+                        <span class="name">创业资讯</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=19357">tcfa</a>
+                        <a class="inline-link red" href="user.php?uid=24091">alwaysmoving</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=484">[笔记本电脑]</a>
+                    <a class="inline-link red" href="thread.php?bid=488">[苹果爱好者]</a>
+                    <a class="inline-link red" href="thread.php?bid=35">[网络技术]</a>
+                    <a class="inline-link red" href="thread.php?bid=13">[优秀的Free&nbsp;OS]</a>
+                    <a class="inline-link red" href="thread.php?bid=209">[网络资源]</a>
+                    <a class="inline-link red" href="thread.php?bid=1001">[Google]</a>
+                    <a class="inline-link red" href="thread.php?bid=197">[手机数码]</a>
+                    <a class="inline-link red" href="thread.php?bid=181">[软件天地]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=675"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">五区</span>
+                        <span class="name">Todo应用</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=3269">MiraculousMa</a>
+                        <a class="inline-link red" href="user.php?uid=5785">Manwe</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=251">[非主流文化]</a>
+                    <a class="inline-link red" href="thread.php?bid=18">[武侠世家]</a>
+                    <a class="inline-link red" href="thread.php?bid=647">[铁路]</a>
+                    <a class="inline-link red" href="thread.php?bid=53">[阅读空间]</a>
+                    <a class="inline-link red" href="thread.php?bid=455">[基督教研究]</a>
+                    <a class="inline-link red" href="thread.php?bid=214">[戏剧]</a>
+                    <a class="inline-link red" href="thread.php?bid=163">[梦回红楼]</a>
+                    <a class="inline-link red" href="thread.php?bid=10">[道释儒/智慧之花]</a>
+                </div>
+            </div>
+            <!--以下内容隐藏-->
+            <!--<div class="board-block">
+                <a class="block-link" href="board.php?bid=678"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">六区</span>
+                        <span class="name">休闲娱乐</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=535">EatingAG</a>
+                        <a class="inline-link red" href="user.php?uid=26356">rgds</a>
+                        <a class="inline-link red" href="user.php?uid=24189">Homagod</a>
+                        <a class="inline-link red" href="user.php?uid=33754">gaoxiang</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=108">[动漫天地]</a>
+                    <a class="inline-link red" href="thread.php?bid=958">[天黑请闭眼]</a>
+                    <a class="inline-link red" href="thread.php?bid=90">[美食天地]</a>
+                    <a class="inline-link red" href="thread.php?bid=94">[旅游]</a>
+                    <a class="inline-link red" href="thread.php?bid=83">[电影]</a>
+                    <a class="inline-link red" href="thread.php?bid=72">[笑口常开]</a>
+                    <a class="inline-link red" href="thread.php?bid=79">[流行歌坛]</a>
+                    <a class="inline-link red" href="thread.php?bid=441">[图片艺术]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=679"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">七区</span>
+                        <span class="name">知性感性</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=9189">Matto</a>
+                        <a class="inline-link red" href="user.php?uid=17149">mayyao</a>
+                        <a class="inline-link red" href="user.php?uid=36714">LJX</a>
+                        <a class="inline-link red" href="user.php?uid=33754">gaoxiang</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=414">[别问我是谁]</a>
+                    <a class="inline-link red" href="thread.php?bid=167">[鹊桥]</a>
+                    <a class="inline-link red" href="thread.php?bid=36">[谈情说爱]</a>
+                    <a class="inline-link red" href="thread.php?bid=52">[男孩子]</a>
+                    <a class="inline-link red" href="thread.php?bid=103">[未名湖]</a>
+                    <a class="inline-link red" href="thread.php?bid=176">[灰色心情]</a>
+                    <a class="inline-link red" href="thread.php?bid=361">[日记]</a>
+                    <a class="inline-link red" href="thread.php?bid=34">[女孩子]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=680"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">八区</span>
+                        <span class="name">三&nbsp;角&nbsp;地</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=3">SYSOP<i class="verified-min vip-min-0"></i></a>
+                        <a class="inline-link red" href="user.php?uid=26356">rgds</a>
+                        <a class="inline-link red" href="user.php?uid=4767">Javier</a>
+                        <a class="inline-link red" href="user.php?uid=3269">MiraculousMa</a>
+                        <a class="inline-link red" href="user.php?uid=28417">hcwanghao</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=71">[跳蚤市场]</a>
+                    <a class="inline-link red" href="thread.php?bid=896">[实习]</a>
+                    <a class="inline-link red" href="thread.php?bid=99">[找工作啦]</a>
+                    <a class="inline-link red" href="thread.php?bid=22">[三角地]</a>
+                    <a class="inline-link red" href="thread.php?bid=419">[学生资助中心兼职信息]</a>
+                    <a class="inline-link red" href="thread.php?bid=1380">[薅羊毛]</a>
+                    <a class="inline-link red" href="thread.php?bid=724">[美丽市场]</a>
+                    <a class="inline-link red" href="thread.php?bid=845">[求职信息发布]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=681"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">九区</span>
+                        <span class="name">体育修身</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=26356">rgds</a>
+                        <a class="inline-link red" href="user.php?uid=4767">Javier</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=88">[篮球公园]</a>
+                    <a class="inline-link red" href="thread.php?bid=93">[足球世界]</a>
+                    <a class="inline-link red" href="thread.php?bid=519">[体育游戏]</a>
+                    <a class="inline-link red" href="thread.php?bid=219">[健美健身]</a>
+                    <a class="inline-link red" href="thread.php?bid=659">[皇家马德里]</a>
+                    <a class="inline-link red" href="thread.php?bid=77">[羽毛球]</a>
+                    <a class="inline-link red" href="thread.php?bid=710">[曼联王朝]</a>
+                    <a class="inline-link red" href="thread.php?bid=861">[跑步]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=682"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">Ａ区</span>
+                        <span class="name">社团群体</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=36714">LJX</a>
+                        <a class="inline-link red" href="user.php?uid=24189">Homagod</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=224">[山鹰论坛]</a>
+                    <a class="inline-link red" href="thread.php?bid=143">[爱心畅谈]</a>
+                    <a class="inline-link red" href="thread.php?bid=783">[流浪猫关爱协会]</a>
+                    <a class="inline-link red" href="thread.php?bid=696">[手语分社]</a>
+                    <a class="inline-link red" href="thread.php?bid=248">[我们文学社]</a>
+                    <a class="inline-link red" href="thread.php?bid=923">[马克思主义学会]</a>
+                    <a class="inline-link red" href="thread.php?bid=952">[定向运动协会]</a>
+                    <a class="inline-link red" href="thread.php?bid=344">[元火动漫社]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=683"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">Ｂ区</span>
+                        <span class="name">组织机构</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=36714">LJX</a>
+                        <a class="inline-link red" href="user.php?uid=24189">Homagod</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=690">[心理健康教育与咨询中心]</a>
+                    <a class="inline-link red" href="thread.php?bid=242">[北大青年志愿者协会]</a>
+                    <a class="inline-link red" href="thread.php?bid=289">[社团文体之家]</a>
+                    <a class="inline-link red" href="thread.php?bid=253">[北京大学学生会]</a>
+                    <a class="inline-link red" href="thread.php?bid=454">[团委学术科创部]</a>
+                    <a class="inline-link red" href="thread.php?bid=458">[北大青年]</a>
+                    <a class="inline-link red" href="thread.php?bid=246">[北大团校]</a>
+                    <a class="inline-link red" href="thread.php?bid=300">[北大新闻网]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=685"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">Ｃ区</span>
+                        <span class="name">课程特区</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=36714">LJX</a>
+                        <a class="inline-link red" href="user.php?uid=24189">Homagod</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=485">[心理学概论]</a>
+                    <a class="inline-link red" href="thread.php?bid=543">[中国经济专题]</a>
+                    <a class="inline-link red" href="thread.php?bid=563">[公共德语]</a>
+                    <a class="inline-link red" href="thread.php?bid=1010">[心理学双学位]</a>
+                    <a class="inline-link red" href="thread.php?bid=1320">[人类的性、生育与健康]</a>
+                    <a class="inline-link red" href="thread.php?bid=568">[传记文学]</a>
+                    <a class="inline-link red" href="thread.php?bid=656">[美学原理]</a>
+                    <a class="inline-link red" href="thread.php?bid=814">[西方美术史十五讲]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=686"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">Ｄ区</span>
+                        <span class="name">未名新区</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=687"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">Ｆ区</span>
+                        <span class="name">校务特区</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=32424">xRoyal</a>
+                        <a class="inline-link red" href="user.php?uid=686">NeverHigh</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=625">[北京大学就业指导中心]</a>
+                    <a class="inline-link red" href="thread.php?bid=668">[北京大学计算中心]</a>
+                    <a class="inline-link red" href="thread.php?bid=438">[校长信箱]</a>
+                    <a class="inline-link red" href="thread.php?bid=1075">[北京大学港澳台办公室]</a>
+                    <a class="inline-link red" href="thread.php?bid=316">[北京大学体育教研部]</a>
+                    <a class="inline-link red" href="thread.php?bid=622">[北京大学财务部]</a>
+                    <a class="inline-link red" href="thread.php?bid=627">[北京大学大学英语教研室]</a>
+                    <a class="inline-link red" href="thread.php?bid=411">[北京大学学生资助中心]</a>
+                </div>
+            </div>
+            <div class="board-block">
+                <a class="block-link" href="board.php?bid=688"></a>
+                <div class="upper">
+                    <div class="row">
+                        <span class="number">Ｇ区</span>
+                        <span class="name">俱&nbsp;乐&nbsp;部</span>
+                    </div>
+                    <div class="row">
+                        <span class="label">区务：</span>
+                        <a class="inline-link red" href="user.php?uid=5201">scienco</a>
+                        <a class="inline-link red" href="user.php?uid=9189">Matto</a>
+                        <a class="inline-link red" href="user.php?uid=23162">sliorveen</a>
+                    </div>
+                    <img class="top-right" src="_resource_/images/board/banmiananniu.png" />
+                </div>
+                <div class="lower">
+                    <span class="label">热门版面：</span>
+                    <a class="inline-link red" href="thread.php?bid=841">[心香一瓣]</a>
+                    <a class="inline-link red" href="thread.php?bid=1254">[无人之旅]</a>
+                    <a class="inline-link red" href="thread.php?bid=1004">[永无乡]</a>
+                    <a class="inline-link red" href="thread.php?bid=797">[猪头帮]</a>
+                    <a class="inline-link red" href="thread.php?bid=1077">[寂寞沙洲冷]</a>
+                    <a class="inline-link red" href="thread.php?bid=997">[爱猫所以遇到你]</a>
+                    <a class="inline-link red" href="thread.php?bid=1180">[球迷之家]</a>
+                    <a class="inline-link red" href="thread.php?bid=1128">[唱词机俱乐部]</a>
+                </div>
+            </div>
+        </div>-->
+            <!--以上内容隐藏-->
+        </div>
+        <div class="section"  data-show-mode="list">
+            <div class="section-title">
+                <span>默认版面</span>
+                <div class="right">
+                    <a class="button" data-action='show-blocks'><img src="_resource_/images/board/bankuai.png"/></a>
+                    <a class="button" data-action='show-list'><img src="_resource_/images/board/liebiao.png"/></a>
+                </div>
+            </div>
+            <div class="sub-section" data-fold="open">
+                <div class="section-content">
+                    <div class="boards-wrapper blocks">
+                        <div class="set">
+                            <div class="board-block color-block" data-bid="16">
+                                <a class="block-link" href="thread.php?bid=16"></a>
+                                <div class="upper">
+                                    <a class="star" data-action="make-favorite"></a>
+                                    <span class="eng-name">BBShelp</span>
+                                    <a class="update" href="post-read.php?bid=16&amp;threadid=17048010&amp;page=a&amp;postid=20027817#20027817">最后更新：04-08 16:19</a>
+                                    <span class="name">BBS使用求助        </span>
+                                    <span class="people">2人</span>
+                                </div>
+                                <div class="lower">
+                                    <span class="admin">版务：</span>
+                                    <a class="admin-link" href="user.php?uid=24091">alwaysmoving</a>
+                                    <a class="admin-link" href="user.php?uid=9877">satanxxs</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="boards-wrapper list">
+                        <div class="set"><!--一个board和他的所有子board在一个set里面-->
+                            <div class="board-block" data-bid="16">
+                                <a class="block-link" href="thread.php?bid=16"></a>
+                                <div class="left">
+                                    <a class="star" data-action="make-favorite"></a>
+                                    <span class="eng-name">BBShelp</span>
+                                    <span class="name">BBS使用求助</span>
+                                    <span class="people">2人</span>
+                                </div>
+                                <div class="right">
+                                    <div class="admin">
+                                        <span>版务：</span>
+                                        <a class="inline-link" href="user.php?uid=24091">alwaysmoving</a>
+                                        <a class="inline-link" href="user.php?uid=9877">satanxxs</a>
+                                    </div>
+                                    <a class="update" href="post-read.php?bid=16&amp;threadid=17048010&amp;page=a&amp;postid=20027817#20027817">最后更新：04-08 16:19</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-wrapper" style="display: none">
+            <div id="favorite-modal" class="modal"  >
+                <img src="_resource_/images/board/ok.png">
+                <span>收藏成功!</span>
+            </div>
+        </div>
+    </div>
+    <!-- end main -->
+    <!-- content end-->
+</div>
+
+<div class="mask mask-without-header"></div>
+
+<div class="mask mask-full-screen" id="page-notice-container">
+    <div class="page-notice box-shadow">
+        <p>您输入的密码有误，请重新输入</p>
+        <button>确认</button>
+    </div>
+</div>
+
+<div class="mask mask-transparent"></div>
+
+<div class="mask mask-transparent top-nav"></div>
+
+<footer id="footer">
+    <p><a data-no-pjax href="._resource_/123/" target="_blank">常用网站</a> - <a href="download.php">相关下载</a> - <a href="publication.php">聚远社刊</a> - <a href="about-us.php">关于我们</a> - <a href="contact.php">联系我们</a> - <a href="join-us.php">加入我们</a> - <a href="help.php">帮助中心</a> - <a href="mail-new.php?username=SYSOP">意见反馈</a></p>
+    <p>© 2012–2019 聚远社BBS</p>
+</footer>
+
+</body>
+</html>
